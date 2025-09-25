@@ -1,17 +1,17 @@
-import { useState } from 'react';
-import { 
-  Bars3Icon, 
+import { useState } from "react";
+import {
+  Bars3Icon,
   XMarkIcon,
   UserIcon,
   Cog6ToothIcon,
   ArrowRightOnRectangleIcon,
   HomeIcon,
-  DocumentTextIcon
-} from '@heroicons/react/24/outline';
-import { useAuth } from '../hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
-import Button from './ui/Button';
-import Notes from './Notes';
+  DocumentTextIcon,
+} from "@heroicons/react/24/outline";
+import { useAuth } from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import Button from "./ui/Button";
+import Notes from "./Notes";
 
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -20,19 +20,26 @@ const Dashboard = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate("/login");
   };
 
   const navigation = [
-    { name: 'Dashboard', href: '#', icon: HomeIcon, current: true }
+    { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
   ];
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Mobile sidebar */}
-      <div className={`fixed inset-0 flex z-40 lg:hidden ${sidebarOpen ? '' : 'hidden'}`}>
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setSidebarOpen(false)} />
-        
+      <div
+        className={`fixed inset-0 flex z-40 lg:hidden ${
+          sidebarOpen ? "" : "hidden"
+        }`}
+      >
+        <div
+          className="fixed inset-0 bg-gray-600 bg-opacity-75"
+          onClick={() => setSidebarOpen(false)}
+        />
+
         <div className="relative flex-1 flex flex-col max-w-xs w-full bg-white">
           <div className="absolute top-0 right-0 -mr-12 pt-2">
             <button
@@ -43,7 +50,7 @@ const Dashboard = () => {
               <XMarkIcon className="h-6 w-6 text-white" />
             </button>
           </div>
-          
+
           <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
             <div className="flex-shrink-0 flex items-center px-4">
               <h1 className="text-xl font-bold text-gray-900">Notes App</h1>
@@ -55,8 +62,8 @@ const Dashboard = () => {
                   href={item.href}
                   className={`${
                     item.current
-                      ? 'bg-indigo-100 text-indigo-900'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      ? "bg-indigo-100 text-indigo-900"
+                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                   } group flex items-center px-2 py-2 text-base font-medium rounded-md`}
                 >
                   <item.icon className="mr-4 flex-shrink-0 h-6 w-6" />
@@ -82,8 +89,8 @@ const Dashboard = () => {
                   href={item.href}
                   className={`${
                     item.current
-                      ? 'bg-indigo-100 text-indigo-900'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      ? "bg-indigo-100 text-indigo-900"
+                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                   } group flex items-center px-2 py-2 text-sm font-medium rounded-md`}
                 >
                   <item.icon className="mr-3 flex-shrink-0 h-6 w-6" />
@@ -114,7 +121,7 @@ const Dashboard = () => {
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">Notes App</h1>
                 <p className="text-sm text-gray-600">
-                  Welcome back, {user?.firstName || user?.email || 'User'}!
+                  Welcome back, {user?.firstName || user?.email || "User"}!
                   {user?.role && (
                     <span className="ml-2 px-2 py-1 bg-indigo-100 text-indigo-800 text-xs rounded-full">
                       {user.role}
@@ -128,10 +135,6 @@ const Dashboard = () => {
                 </p>
               </div>
               <div className="flex items-center space-x-4">
-                <Button variant="outline" size="sm">
-                  <UserIcon className="h-4 w-4 mr-2" />
-                  Profile
-                </Button>
                 <Button variant="ghost" size="sm" onClick={handleLogout}>
                   <ArrowRightOnRectangleIcon className="h-4 w-4 mr-2" />
                   Logout
