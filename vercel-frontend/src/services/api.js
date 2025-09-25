@@ -1,13 +1,13 @@
 ﻿import axios from "axios";
 import { localStorage as storage } from "../utils/localStorage.js";
 
-const API_BASE_URL = "http://localhost:3000/api";
+const API_BASE_URL = "https://vercel-27w6.vercel.app/api";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    "Content-Type": "application/json"
-  }
+    "Content-Type": "application/json",
+  },
 });
 
 api.interceptors.request.use((config) => {
@@ -25,7 +25,7 @@ api.interceptors.response.use(
       storage.removeItem("token");
       storage.removeItem("user");
       // Don't force redirect here - let the auth context handle it
-      console.log('API: 401 error, cleared auth data');
+      console.log("API: 401 error, cleared auth data");
     }
     return Promise.reject(error);
   }
