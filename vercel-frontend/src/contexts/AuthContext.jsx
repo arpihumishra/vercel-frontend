@@ -1,36 +1,37 @@
-import { useEffect, useReducer } from 'react';
-import { AuthContext } from './auth';
-import { authService } from '../services/authService';
-import { localStorage as storage } from '../utils/localStorage';
+import { useEffect, useReducer } from "react";
+import { AuthContext } from "./auth";
+import { authService } from "../services/authService";
+import { localStorage as storage } from "../utils/localStorage";
+import { mockAuthService } from "../services/mockAuthService";
 
 const authReducer = (state, action) => {
   switch (action.type) {
-    case 'LOGIN_START':
+    case "LOGIN_START":
       return { ...state, loading: true, error: null };
-    case 'LOGIN_SUCCESS':
+    case "LOGIN_SUCCESS":
       return {
         ...state,
         loading: false,
         user: action.payload.user,
         isAuthenticated: true,
-        error: null
+        error: null,
       };
-    case 'LOGIN_FAILURE':
+    case "LOGIN_FAILURE":
       return {
         ...state,
         loading: false,
         error: action.payload,
-        isAuthenticated: false
+        isAuthenticated: false,
       };
-    case 'LOGOUT':
+    case "LOGOUT":
       return {
         ...state,
         user: null,
         isAuthenticated: false,
         loading: false,
-        error: null
+        error: null,
       };
-    case 'SET_LOADING':
+    case "SET_LOADING":
       return { ...state, loading: action.payload };
     default:
       return state;
@@ -41,74 +42,74 @@ const initialState = {
   user: null,
   isAuthenticated: false,
   loading: true,
-  error: null
+  error: null,
 };
 
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   useEffect(() => {
-    console.log('AuthContext: Checking stored auth data...');
-    const token = storage.getItem('token');
-    const user = storage.getJSON('user');
-    
-    console.log('AuthContext: Stored token:', token ? 'exists' : 'null');
-    console.log('AuthContext: Stored user:', user);
+    console.log("AuthContext: Checking stored auth data...");
+    const token = storage.getItem("token");
+    const user = storage.getJSON("user");
+
+    console.log("AuthContext: Stored token:", token ? "exists" : "null");
+    console.log("AuthContext: Stored user:", user);
 
     if (token && user) {
-      console.log('AuthContext: Restoring authentication state');
+      console.log("AuthContext: Restoring authentication state");
       dispatch({
-        type: 'LOGIN_SUCCESS',
-        payload: { user }
+        type: "LOGIN_SUCCESS",
+        payload: { user },
       });
     } else {
-      console.log('AuthContext: No stored auth data, setting loading false');
-      dispatch({ type: 'SET_LOADING', payload: false });
+      console.log("AuthContext: No stored auth data, setting loading false");
+      dispatch({ type: "SET_LOADING", payload: false });
     }
   }, []);
 
   const login = async (email, password) => {
-    dispatch({ type: 'LOGIN_START' });
+    dispatch({ type: "LOGIN_START" });
     try {
-      console.log('AuthContext: Starting login...');
+      console.log("AuthContext: Starting login...");
       const response = await authService.login(email, password);
-      console.log('AuthContext: Login API response:', response);
-      
-      storage.setItem('token', response.token);
-      storage.setJSON('user', response.user);
-      
+      console.log("AuthContext: Login API response:", response);
+
+      storage.setItem("token", response.token);
+      storage.setJSON("user", response.user);
+
       dispatch({
-        type: 'LOGIN_SUCCESS',
-        payload: { user: response.user }
+        type: "LOGIN_SUCCESS",
+        payload: { user: response.user },
       });
-      
-      console.log('AuthContext: Login success dispatched');
+
+      console.log("AuthContext: Login success dispatched");
       return response;
     } catch (error) {
-      console.error('AuthContext: Login failed:', error);
+      console.error("AuthContext: Login failed:", error);
       dispatch({
-        type: 'LOGIN_FAILURE',
-        payload: error.response?.data?.message || 'Login failed'
+        type: "LOGIN_FAILURE",
+        payload: error.response?.data?.message || "Login failed",
       });
       throw error;
     }
   };
 
   const register = async (userData) => {
-    dispatch({ type: 'LOGIN_START' });
+    dispatch({ type: "LOGIN_START" });
     try {
-      const response = await mockAuthService.register(userData);
-      storage.setItem('token', response.token);
-      storage.setJSON('user', response.user);
+      const response = await authService.register(userData);
+      storage.setItem("token", response.token);
+      storage.setJSON("user", response.user);
       dispatch({
-        type: 'LOGIN_SUCCESS',
-        payload: { user: response.user }
+        type: "LOGIN_SUCCESS",
+        payload: { success: true },
       });
       return response;
     } catch (error) {
       dispatch({
-        type: 'LOGIN_FAILURE',
-        payload: error.response?.data?.message || 'Registration failed'
+        type: "LOGIN_FAILURE",
+        payload: error.response?.data?.message || "Registration failed",
       });
       throw error;
     }
@@ -116,19 +117,15 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     authService.logout();
-    dispatch({ type: 'LOGOUT' });
+    dispatch({ type: "LOGOUT" });
   };
 
   const value = {
     ...state,
     login,
     register,
-    logout
+    logout,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
