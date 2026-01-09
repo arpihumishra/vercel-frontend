@@ -1,15 +1,15 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-import { useAuth } from '../hooks/useAuth';
-import Button from './ui/Button';
-import Input from './ui/Input';
-import Card from './ui/Card';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { useAuth } from "../hooks/useAuth";
+import Button from "./ui/Button";
+import Input from "./ui/Input";
+import Card from "./ui/Card";
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
@@ -18,15 +18,15 @@ const Login = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: "",
       }));
     }
   };
@@ -35,15 +35,15 @@ const Login = () => {
     const newErrors = {};
 
     if (!formData.email) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
+      newErrors.email = "Email is invalid";
     }
 
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = "Password is required";
     } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+      newErrors.password = "Password must be at least 6 characters";
     }
 
     setErrors(newErrors);
@@ -52,16 +52,16 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     try {
-      console.log('Attempting login...');
+      console.log("Attempting login...");
       await login(formData.email, formData.password);
-      console.log('Login successful, auth context should handle navigation');
+      console.log("Login successful, auth context should handle navigation");
       // Don't navigate here - let the auth state change trigger navigation
     } catch (err) {
-      console.error('Login failed:', err);
+      console.error("Login failed:", err);
     }
   };
 
@@ -72,9 +72,7 @@ const Login = () => {
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
             Welcome back
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Sign in to your account
-          </p>
+          <p className="mt-2 text-sm text-gray-600">Sign in to your account</p>
         </div>
 
         <Card className="mt-8">
@@ -101,7 +99,7 @@ const Login = () => {
                 <Input
                   label="Password"
                   name="password"
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   value={formData.password}
                   onChange={handleChange}
                   error={errors.password}
@@ -129,15 +127,12 @@ const Login = () => {
                     type="checkbox"
                     className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                   />
-                  <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                  <label
+                    htmlFor="remember-me"
+                    className="ml-2 block text-sm text-gray-900"
+                  >
                     Remember me
                   </label>
-                </div>
-
-                <div className="text-sm">
-                  <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
-                    Forgot your password?
-                  </a>
                 </div>
               </div>
 
@@ -147,12 +142,12 @@ const Login = () => {
                 className="w-full"
                 size="lg"
               >
-                {loading ? 'Signing in...' : 'Sign in'}
+                {loading ? "Signing in..." : "Sign in"}
               </Button>
 
               <div className="text-center">
                 <p className="text-sm text-gray-600">
-                  Don't have an account?{' '}
+                  Don't have an account?{" "}
                   <Link
                     to="/register"
                     className="font-medium text-indigo-600 hover:text-indigo-500"
